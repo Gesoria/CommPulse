@@ -1,0 +1,6 @@
+@CommPulse_HostAddress = http://localhost:5073
+
+GET {{CommPulse_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

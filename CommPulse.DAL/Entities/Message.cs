@@ -10,7 +10,7 @@
         /// <summary>
         /// Отправитель соообщения
         /// </summary>
-        public User Sender {  get; set; }
+        public ApplicationUser Sender { get; set; }
 
         /// <summary>
         /// Канал, в котором находится сообщение
@@ -23,7 +23,7 @@
         public string Text { get; set; } 
 
         /// <summary>
-        /// Вложеенные файлы в сообщение
+        /// Вложенные файлы в сообщение
         /// </summary>
         public List<string>? Attached {  get; set; }
 

@@ -26,6 +26,10 @@ namespace CommPulse.DAL
             modelBuilder.Entity<Channel>()
                 .HasMany(e => e.Members)
                 .WithMany(e => e.MemberChannels);
+
+            //Инорирование номера мобильного телефона  и двухфакторной аутентификации
+            modelBuilder.Entity<ApplicationUser>().Ignore(u => u.PhoneNumber);
+            modelBuilder.Entity<ApplicationUser>().Ignore(u => u.TwoFactorEnabled);
         }
     }
 

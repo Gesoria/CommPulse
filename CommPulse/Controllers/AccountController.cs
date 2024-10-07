@@ -42,13 +42,13 @@ public class AccountController : Controller
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
+    public async Task<IActionResult> Login(LoginDTO loginDto)
     {
         // Поиск пользователя по имени
         var user = await _userManager.FindByNameAsync(loginDto.Username);
         if (user == null)
         {
-            return Unauthorized(new { message = "Invalid username or password" });
+            return BadRequest(new { message = "Invalid username or password" });
         }
 
         // Проверка пароля пользователя
@@ -75,7 +75,7 @@ public class AccountController : Controller
         var claims = new[]
         { 
             new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
         var token = new JwtSecurityToken(

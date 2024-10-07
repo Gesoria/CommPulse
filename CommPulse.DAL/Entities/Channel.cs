@@ -10,7 +10,7 @@
         /// <summary>
         /// Создатель канала
         /// </summary>
-        public User Creator { get; set; }
+        public ApplicationUser Creator { get; set; }
 
         /// <summary>
         /// Название канала
@@ -25,6 +25,6 @@
         /// <summary>
         /// Участники канала
         /// </summary>
-        public List<User>? Members { get; set; }
+        public List<ApplicationUser>? Members { get; set; }
     }
 }

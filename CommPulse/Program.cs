@@ -1,5 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using CommPulse.DAL;
+using Microsoft.AspNetCore.Identity;
+using CommPulse.DAL.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace CommPulse;
 
@@ -19,6 +24,38 @@ public class Program
 
         builder.Services.AddDbContext<MyDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("CommPulseDb")));
+
+        //Add identity framework
+        builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+        .AddEntityFrameworkStores<MyDbContext>()
+        .AddDefaultTokenProviders();
+
+        //Settings for Identity
+        builder.Services.Configure<IdentityOptions>(options =>
+        {
+            options.Password.RequireDigit = true;
+            options.Password.RequiredLength = 6;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireLowercase = true;
+
+            options.User.RequireUniqueEmail = true;
+        });
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                };
+            });
+
 
 
         var app = builder.Build();

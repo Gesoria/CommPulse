@@ -1,4 +1,5 @@
 using CommPulse.DAL.Entities;
+using CommPulse.DTO;
 using CommPulse.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,12 +28,15 @@ public class AccountController : Controller
 
     [HttpPost]
     [Route("registration")]
-    public async Task<ActionResult> Registration(UserAPIModel userModel)
+    public async Task<ActionResult> RegistrationAsync(UserApiModel userModel)
     {
         var user = new ApplicationUser
         {
-            UserName = userModel.UserName,
-            Email = userModel.Email
+            UserName = userModel.Name,
+            Email = userModel.Email,
+            PasswordHash = userModel.Password,
+            PhoneNumber = userModel.PhoneNumber
+
         };
         var result = await _userManager.CreateAsync(user, userModel.Password);
               
@@ -42,20 +46,20 @@ public class AccountController : Controller
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginDTO loginDto)
+    public async Task<IActionResult> LoginAsync(LoginDTO loginDto)
     {
         // Поиск пользователя по имени
         var user = await _userManager.FindByNameAsync(loginDto.Username);
         if (user == null)
         {
-            return BadRequest(new { message = "Invalid username or password" });
+            return BadRequest(new { message = "Неправильный логин или пароль" });
         }
 
         // Проверка пароля пользователя
         var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
         if (!result.Succeeded)
         {
-            return Unauthorized(new { message = "Invalid username or password" });
+            return Unauthorized(new { message = "Неправильный логин или пароль" });
         }
 
         // JWT токен

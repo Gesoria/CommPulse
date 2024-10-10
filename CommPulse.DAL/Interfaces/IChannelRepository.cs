@@ -1,6 +1,9 @@
-﻿namespace CommPulse.DAL.Interfaces
+﻿using CommPulse.DAL.Entities;
+
+namespace CommPulse.DAL.Interfaces
 {
-    public class IChannelRepository
+    public interface IChannelRepository
     {
+        Task<List<Channel>> GetChannelsByNameAsync(string name);
     }
 }

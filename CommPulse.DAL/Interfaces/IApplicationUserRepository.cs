@@ -1,6 +1,6 @@
 ﻿namespace CommPulse.DAL.Interfaces
 {
-    public class IApplicationUserRepository
+    public interface IApplicationUserRepository
     {
     }
 }

@@ -5,6 +5,13 @@ using CommPulse.DAL.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using CommPulse.Hubs;
+using CommPulse.BLL.MapperProfiles;
+using CommPulse.MapperApiProfiles;
+using CommPulse.BLL.Services;
+using CommPulse.BLL.Interfaces;
+using CommPulse.DAL.Interfaces;
+using CommPulse.DAL.Repositories;
 
 namespace CommPulse;
 
@@ -55,7 +62,17 @@ public class Program
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                 };
             });
+        builder.Services.AddSignalR();
+        builder.Services.AddAutoMapper(
+             typeof(ChannelMapper).Assembly,
+             typeof(MessageMapper).Assembly,
+             typeof(UserMapper).Assembly,
+             typeof(ChannelApiMapper).Assembly,
+             typeof(UserApiMapper).Assembly,
+             typeof(MessageApiMapper).Assembly);
 
+        builder.Services.AddTransient<IChannelService, ChannelService>();
+        builder.Services.AddTransient<IChannelRepository, ChannelRepository>();
 
 
         var app = builder.Build();
@@ -73,8 +90,9 @@ public class Program
 
         app.UseAuthorization();
 
-
         app.MapControllers();
+
+        app.MapHub<ChatHub>("/chathub");  // Настраивает маршрутизацию для SignalR хаба
 
         app.Run();
     }

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CommPulse.BLL.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CommPulse.BLL.Interfaces
 {
-    internal class IChannelService
+    public interface IChannelService
     {
+        Task<ChannelModel> CreateChannelAsync(ChannelModel channelModel, string creatorId);
+        Task<List<ChannelModel>?> GetChannelsByNameAsync(string name);
     }
+
 }

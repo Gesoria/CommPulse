@@ -1,7 +1,9 @@
-﻿namespace CommPulse.BLL.Services
+﻿using CommPulse.BLL.Interfaces;
+
+namespace CommPulse.BLL.Services
 {
     
-    public class UserService
+    public class UserService : IUserService
     {
     }
 }

@@ -12,9 +12,9 @@ namespace CommPulse.BLL.MapperProfiles
             CreateMap<Channel, ChannelModel>().ForMember(dst => dst.Creator, opt => opt.MapFrom(src => src.Creator));
 
             CreateMap<UserModel, ApplicationUser>()
-                .ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.Name));
+                .ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.UserName));
             CreateMap<ApplicationUser, UserModel>()
-                .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.UserName));
+                .ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.UserName));
         }
     }
 }

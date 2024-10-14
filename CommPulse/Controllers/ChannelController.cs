@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CommPulse.BLL.Interfaces;
 using CommPulse.BLL.Models;
-using CommPulse.DTO;
+using CommPulse.Models.Inputs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CommPulse.Controllers
@@ -19,14 +19,14 @@ namespace CommPulse.Controllers
         }
 
         [HttpPost("create-channel")]
-        public async Task<IActionResult> CreateChannel(ChannelDTO channelDto)
+        public async Task<IActionResult> CreateChannel(ChannelInputModel channelInputModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState); //Ошибка 400 при невалидных данных
             }
 
-            var newChannel = _mapper.Map<ChannelModel>(channelDto);
+            var newChannel = _mapper.Map<ChannelModel>(channelInputModel);
 
             try
             {
@@ -44,7 +44,7 @@ namespace CommPulse.Controllers
         }
 
         [HttpGet("get-channel-by-name/{name}")]
-        public async Task<ActionResult<List<ChannelDTO>>> GetChannelsByName(string name)
+        public async Task<ActionResult<List<ChannelInputModel>>> GetChannelsByName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -55,8 +55,8 @@ namespace CommPulse.Controllers
 
             if (channelsModel.Count != 0 || channelsModel != null)
             {
-                var channelsDto = _mapper.Map<List<ChannelDTO>>(channelsModel);
-                return channelsDto;
+                var channelsInputModel = _mapper.Map<List<ChannelInputModel>>(channelsModel);
+                return channelsInputModel;
             }
             else
             {

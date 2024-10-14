@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CommPulse.BLL.Models;
-using CommPulse.DTO;
+using CommPulse.Models.Inputs;
 
 namespace CommPulse.MapperApiProfiles
 {
@@ -8,7 +8,7 @@ namespace CommPulse.MapperApiProfiles
     {
         public MessageApiMapper() 
         {
-            CreateMap<MessageSendDTO, MessageModel>().ReverseMap();
+            CreateMap<MessageInputModel, MessageModel>().ReverseMap();
         }
     }
 }

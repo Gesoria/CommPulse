@@ -1,11 +1,11 @@
-﻿namespace CommPulse.DTO
+﻿namespace CommPulse.Models.Inputs
 {
     /// <summary>
     /// Класс для передачи данных пользователя между клиентом и сервером
     /// </summary>
-    public class LoginDTO
+    public class LoginInputModel
     {
-        public string Username { get; set; }
-        public string Password { get; set; }       
+        public string UserName { get; set; }
+        public string Password { get; set; }
     }
 }

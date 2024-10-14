@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CommPulse.BLL.Interfaces;
 using CommPulse.BLL.Models;
+using CommPulse.DAL.Entities;
 using CommPulse.DAL.Interfaces;
 
 namespace CommPulse.BLL.Services
@@ -9,48 +10,47 @@ namespace CommPulse.BLL.Services
     {
         private readonly IMapper _mapper;
         private readonly IChannelRepository _channelRepository;
-        //private readonly IUserService _userService;
-        
+        private readonly IApplicationUserRepository _userRepository;
 
-        public ChannelService(IMapper mapper, IChannelRepository channelRepository)
+
+        public ChannelService(IMapper mapper, IChannelRepository channelRepository, IApplicationUserRepository userRepository)
         {
             _mapper = mapper;
             _channelRepository = channelRepository;
+            _userRepository = userRepository;
         }
 
-        public Task<ChannelModel> CreateChannelAsync(ChannelModel channelModel, string creatorId)
+      
+
+
+        public async Task<ChannelModel> CreateChannelAsync(ChannelModel channelModel, string name)
         {
-            throw new NotImplementedException();
+            // Проверка, не существует ли канал с таким же именем
+            var existingChannel = await _channelRepository.GetChannelsByNameAsync(channelModel.Name);
+            if (existingChannel != null)
+            {
+                throw new ArgumentException("Канал с таким именем уже существует");
+            }
+
+            // Получаем пользователя, который создаёт канал
+            var creator = await _userRepository.GetUserByNameAsync(name);
+            if (creator == null)
+            {
+                throw new ArgumentException("Создатель канала не найден");
+            }
+
+            // Маппинг DTO в модель
+            var newChannel = _mapper.Map<Channel>(channelModel);
+            newChannel.Creator = creator;
+            newChannel.Members = new List<ApplicationUser> { creator }; // Добавляем создателя как первого участника
+            //newChannel.CreatedAt = DateTime.UtcNow; // Если нужна отметка времени создания
+
+            // Сохранение нового канала в базе данных
+            var result = await _channelRepository.CreateChannelAsync(newChannel);
+            var channelResult = _mapper.Map<ChannelModel>(result);
+            
+            return channelResult;
         }
-
-
-        //public async Task<ChannelModel> CreateChannelAsync(ChannelModel channelModel, string creatorId)
-        //{
-        //    // Проверка, не существует ли канал с таким же именем
-        //    var existingChannel = await _channelRepository.GetChannelByNameAsync(channelDto.Name);
-        //    if (existingChannel != null)
-        //    {
-        //        throw new ArgumentException("Канал с таким именем уже существует");
-        //    }
-
-        //    // Получаем пользователя, который создаёт канаЫл
-        //    var creator = await _userService.GetUserByIdAsync(creatorId);
-        //    if (creator == null)
-        //    {
-        //        throw new ArgumentException("Создатель канала не найден");
-        //    }
-
-        //    // Маппинг DTO в модель
-        //    var newChannel = _mapper.Map<ChannelModel>(channelDto);
-        //    newChannel.Creator = creator;
-        //    newChannel.Members = new List<ApplicationUser> { creator }; // Добавляем создателя как первого участника
-        //    newChannel.CreatedAt = DateTime.UtcNow; // Если нужна отметка времени создания
-
-        //    // Сохранение нового канала в базе данных
-        //    await _channelRepository.CreateAsync(newChannel);
-
-        //    return newChannel;
-        //}
         public async Task<List<ChannelModel>?> GetChannelsByNameAsync(string name)
         {        
             try

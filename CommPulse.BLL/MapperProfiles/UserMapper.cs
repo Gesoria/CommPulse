@@ -8,7 +8,7 @@ namespace CommPulse.BLL.MapperProfiles
     {
         public UserMapper() 
         {
-
+            CreateMap<UserModel, ApplicationUser>().ReverseMap();
         }
     }
 }

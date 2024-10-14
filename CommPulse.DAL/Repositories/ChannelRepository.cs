@@ -1,4 +1,4 @@
-﻿using CommPulse.DAL.Entities;
+﻿.using CommPulse.DAL.Entities;
 using CommPulse.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +11,12 @@ namespace CommPulse.DAL.Repositories
         public ChannelRepository(MyDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+        public async Task<Channel> CreateChannelAsync(Channel channel)
+        {
+            var result = await _dbContext.Channels.AddAsync(channel);
+            _dbContext.SaveChangesAsync();
+            return channel;
         }
 
         public async Task<List<Channel>> GetChannelsByNameAsync(string name)

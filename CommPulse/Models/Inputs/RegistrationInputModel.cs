@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CommPulse.Models
+namespace CommPulse.Models.Inputs
 {
-    public class UserApiModel
+    public class RegistrationInputModel
     {
-        public string Name { get; set; }
+        public string UserName { get; set; }
 
-        [EmailAddress(ErrorMessage = "Введите корректный e-mail адрес")] 
+        [EmailAddress(ErrorMessage = "Введите корректный e-mail адрес")]
         public string Email { get; set; }
 
         [Phone(ErrorMessage = "Введите корректный номер телефона")]

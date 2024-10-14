@@ -1,6 +1,5 @@
 using CommPulse.DAL.Entities;
-using CommPulse.DTO;
-using CommPulse.Models;
+using CommPulse.Models.Inputs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -28,11 +27,11 @@ public class AccountController : Controller
 
     [HttpPost]
     [Route("registration")]
-    public async Task<ActionResult> RegistrationAsync(UserApiModel userModel)
+    public async Task<ActionResult> RegistrationAsync(RegistrationInputModel userModel)
     {
         var user = new ApplicationUser
         {
-            UserName = userModel.Name,
+            UserName = userModel.UserName,
             Email = userModel.Email,
             PasswordHash = userModel.Password,
             PhoneNumber = userModel.PhoneNumber
@@ -46,17 +45,17 @@ public class AccountController : Controller
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAsync(LoginDTO loginDto)
+    public async Task<IActionResult> LoginAsync(LoginInputModel login)
     {
         // Поиск пользователя по имени
-        var user = await _userManager.FindByNameAsync(loginDto.Username);
+        var user = await _userManager.FindByNameAsync(login.UserName);
         if (user == null)
         {
             return BadRequest(new { message = "Неправильный логин или пароль" });
         }
 
         // Проверка пароля пользователя
-        var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+        var result = await _signInManager.CheckPasswordSignInAsync(user, login.Password, false);
         if (!result.Succeeded)
         {
             return Unauthorized(new { message = "Неправильный логин или пароль" });
@@ -73,6 +72,7 @@ public class AccountController : Controller
     /// </summary> 
     private string GenerateJwtToken(ApplicationUser user)
     {
+
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
